@@ -3,7 +3,7 @@ node-tip-bot-twitter is an open-source node.js twitter bot for tipping with altc
 # Instalation
 To install node-tip-bot simply clone this repo and install dependencies:
 ```bash
-git clone https://github.com/Biersteker/node-tip-bot-twitter
+git clone https://github.com/gameunits/node-tip-bot-twitter
 cd node-tip-bot-twitter
 npm install
 ```
