@@ -38,7 +38,7 @@ Basic coin settings.
 * **min_tip** - minimum amount of coins to tip
 
 # How to run it?
-Before running the bot, you have to be running your coin daemon with JSON-RPC API enabled. To enable, add this to your coin daemon configuration file (eg. `~/.dogecoin/dogecoin.conf`):
+Before running the bot, you have to be running your coin daemon with JSON-RPC API enabled. To enable, add this to your coin daemon configuration file (eg. `~/.gameunits/gameunits.conf`):
 ```ini
 server=1
 daemon=1
@@ -49,7 +49,7 @@ rpcallowip=<your bot's ip address or just 127.0.0.1 if hosted on the same machin
 To run the bot simply use `node bin/tipbot` or `npm start`.
 
 ## Commands
-Commands are executed by placing gameunitsbot <command> <arguments> in a tweet.
+Commands are executed by placing gameunits <command> <arguments> in a tweet.
 
 | **Command** | **Arguments**     | **Description**
 |-------------|-------------------|--------------------------------------------------------------------
