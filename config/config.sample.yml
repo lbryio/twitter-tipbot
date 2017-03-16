@@ -15,12 +15,12 @@ rpc:
   prefix: ''
 coin:
   withdrawal_fee: 1
-  min_withdraw: 5
-  min_confirmations: 5
-  min_tip: 10
+  min_withdraw: 1
+  min_confirmations: 10
+  min_tip: 0.1
   min_rain: 1
   short_name: ' UNITS'
-  full_name: gameunits 
+  full_name: Gameunits 
 webadmin:
   enabled: false
   port: 8080
@@ -54,7 +54,7 @@ messages:
   error: 'Sorry %name%, something went wrong.'
   no_funds: "Sorry %name%, you don't have enough funds (you're %short%%short_name% short)"
   not_identified: '%name%: You need to be identified with NickServ to tip.'
-  tipped: '%from% tipped %to% %amount%%short_name%! "tweet %nick% help" to claim.'
+  tipped: '@%from% Tipped @%to% %amount%%short_name%! "tweet @%nick% gameunits help" to claim.'
   balance: '%name% has %balance%%short_name%.'
   balance_unconfirmed: '%name% has %balance%%short_name% (unconfirmed: %unconfirmed%%short_name%)'
   deposit_address: Your deposit address %address%
