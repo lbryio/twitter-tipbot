@@ -74,6 +74,7 @@ messages:
     - 'withdraw <%full_name% address> - withdraws your whole wallet balance to specified address (minus %withdrawal_fee%%short_name% withdrawal fee)'
     - 'tip <nick> <amount> - sends the specified amount of %full_name% to nickname'
     - 'terms - displays terms and conditions for using %nick%'
+    - 'payout - How can I withdraw my Gameunits from tipbot ? Just Download Gameunits client from : http://gameunits.org/#downloads'
   terms:
     - 'There are no fees to use %nick%, with the exception of %withdrawal_fee%%short_name% fee on withdrawals.'
     - 'In no event shall %nick% be responsible in the event of lost, stolen or misdirected funds.'
