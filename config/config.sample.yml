@@ -54,7 +54,7 @@ messages:
   error: 'Sorry %name%, something went wrong.'
   no_funds: "Sorry %name%, you don't have enough funds (you're %short%%short_name% short)"
   not_identified: '%name%: You need to be identified with NickServ to tip.'
-  tipped: '@%from% Tipped @%to% %amount%%short_name%! "tweet @%nick% gameunits help" to claim.'
+  tipped: ' Tipped @%to% %amount%%short_name%! "tweet @%nick% gameunits help" to claim.'
   balance: '%name% has %balance%%short_name%.'
   balance_unconfirmed: '%name% has %balance%%short_name% (unconfirmed: %unconfirmed%%short_name%)'
   deposit_address: Your deposit address %address%
