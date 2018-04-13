@@ -1,6 +1,6 @@
 {
   "name": "node-tip-bot-twitter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "node.js based tipping bot for any coin",
   "main": "bin/tipbot",
   "dependencies": {
@@ -11,10 +11,17 @@
     "swig": "1.3.2",
     "express": "3.4.8"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "1.8.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bin/tipbot"
+    "start": "node bin/tipbot",
+    "prettier": "prettier --write \"{bot,.}/**/*.{js,json}\" --single-quote --print-width 240",
+    "build": "babel bot -d dist",
+    "prod": "babel bot -d dist & node dist/bot.js",
+    "lint": "prettier --write \"{bot,.}/**/*.{js,json}\" --single-quote --print-width 240",
+    "precommit": "prettier --write \"{bot,.}/**/*.{js,json}\" --single-quote --print-width 240"
   },
   "repository": {
     "type": "git",
@@ -26,14 +33,5 @@
     "url": "https://github.com/gameunits/node-tip-bot/issues"
   },
   "homepage": "https://github.com/gameunits/node-tip-bot",
-  "keywords": [
-    "gameunits",
-    "bitcoin",
-    "litecoin",
-    "altcoin",
-    "tip",
-    "tipbot",
-    "irc",
-    "bot"
-  ]
+  "keywords": ["gameunits", "bitcoin", "litecoin", "altcoin", "tip", "tipbot", "irc", "bot"]
 }
