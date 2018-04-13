@@ -1,7 +1,7 @@
-var winston = require('winston'),
+const winston = require('winston'),
     fs = require('fs'),
     yaml = require('js-yaml'),
-    coin = require('node-gameunits');
+    coind = require('node-gameunits');
 
 const Twitter = require('twitter');
 // check if the config file exists
@@ -22,7 +22,7 @@ if (settings.log.file) {
 }
 // connect to coin json-rpc
 winston.info('Connecting to coind...');
-var coin = coin({
+let coin = coind({
     host: settings.rpc.host,
     port: settings.rpc.port,
     user: settings.rpc.user,
@@ -105,14 +105,16 @@ String.prototype.expand = function (values) {
 };
 client.stream('statuses/filter', {track: settings.twitter.twitterkeyword}, function (stream) {
     stream.on('error', function (error) {
-        winston.error('Something went wrong with the twitter streaming api. ');
+        winston.error('Something went wrong with the twitter streaming api.');
+        winston.error(error);
     });
     stream.on('end', function (reason) {
-        winston.error('Twitter streaming api throws end');
+        winston.error('Twitter streaming api failed with');
+        winston.error(reason);
     });
     stream.on('data', function (tweet) {
         console.log('@' + tweet.user.screen_name + '|' + tweet.text);
-        if (tweet.text.substring(0, 2) == 'RT') {
+        if (tweet.text.substring(0, 2) === 'RT') {
             console.log('Retweet Ingrored');
             return;
         }
