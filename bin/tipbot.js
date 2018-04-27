@@ -184,7 +184,7 @@ client.stream('statuses/filter', {track: settings.twitter.twitterkeyword}, funct
                     if (balance >= amount) {
                         coin.send('move', settings.rpc.prefix + from.toLowerCase(), settings.rpc.prefix + to.toLowerCase(), amount, function (err, reply) {
                             locks[from.toLowerCase()] = null;
-                            if (err || reply) {
+                            if (err || !reply) {
                                 winston.error('Error in tip command', err);
                                 replytweet(from, replyid, settings.messages.error.expand({name: from}));
                                 return;
@@ -208,6 +208,7 @@ client.stream('statuses/filter', {track: settings.twitter.twitterkeyword}, funct
                     }
                 });
                 break;
+            case 'deposit':
             case 'address':
                 console.log('adress');
                 var user = from.toLowerCase();
