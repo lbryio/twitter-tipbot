@@ -1,6 +1,17 @@
-node-tip-bot-twitter is an open-source node.js twitter bot for tipping with altcoins. 
+This is a fork of node-tip-bot-twitter, an open-source node.js twitter bot for tipping with altcoins. 
+In particular, this fork is for [LBC](https://lbry.io/). LBRY.io, the network behind it, describes
+itself as:
 
-# Instalation
+```
+...a free, open, and community-run digital marketplace.
+You own your data. You control the network. Indeed, you are the network.
+Hollywood films, college lessons, amazing streamers and more are on the first media network ruled by you.
+```
+
+If you want to get started with LBRY.io, go to https://lbry.io/get. If you wish to set up your own twitter
+tip bot, it may be more beneficial to start with the [original node-tip-bot-twitter](https://github.com/gameunits/node-tip-bot-twitter).
+
+# Installation
 To install node-tip-bot simply clone this repo and install dependencies:
 ```bash
 git clone https://github.com/gameunits/node-tip-bot-twitter
