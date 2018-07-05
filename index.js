@@ -37,12 +37,13 @@ const T = new Twit({
   strictSSL: true // optional - requires SSL certificates to be valid.
 });
 
-var stream = T.stream("statuses/filter", { track: "@devlbctipbot" });
+const stream = T.stream("statuses/filter", { track: config.get("bot.handle") });
 logger.info("Started LBRY twitter tipbot.");
 
 stream.on("tweet", function(tweet) {
+  if(tweet.user.screen_name === config.get("bot.handle").substring(1)) return;
   let msg = checkTrunc(tweet);
-  msg = msg.slice(msg.indexOf("@devlbctipbot")).split(" ");
+  msg = msg.slice(msg.indexOf(config.get("bot.handle"))).split(" ");
   checkTweet(tweet, msg);
 });
 
@@ -63,6 +64,9 @@ function checkTweet(tweet, msg) {
     case "tip":
       doTip(tweet, msg);
       break;
+    case "terms":
+      doTerms(tweet, msg);
+      break;
   }
 }
 
@@ -70,7 +74,8 @@ async function doHelp(tweet, msg) {
   try {
     let post = await T.post("statuses/update", {
       status:
-        "All commands should be called with @ devlbctipbot \n" +
+        `@${tweet.user.screen_name} `+
+        "All commands should be called with @ + subcommand \n" +
         "help - Shows this command. \n" +
         "balance - Get your balance. \n" +
         "deposit - Get address for your deposits. \n" +
@@ -85,12 +90,15 @@ async function doHelp(tweet, msg) {
     logger.error(e);
   }
 }
+async function doTerms(tweet, msg){
+// ADD terms
+}
 async function doBalance(tweet, msg) {
   try {
-    const balance = await lbry.getBalance(tweet.user.id_str, 3);
+    const balance = await lbry.getBalance(id(tweet.user.id_str), config.get("bot.requiredConfirms")); // Amount of confirms before we can use it.
     const post = await T.post("statuses/update", {
-      status: `You have ${balance} LBC.`,
-      in_reply_to_status_id: tweet.id_str
+      in_reply_to_status_id: tweet.id_str,
+      status: `@${tweet.user.screen_name} You have ${balance} LBC.`
     });
     logger.info(
       `Sent balance command to ${tweet.user.screen_name}, tweet id: ${
@@ -104,7 +112,7 @@ async function doBalance(tweet, msg) {
 async function doDeposit(tweet, msg) {
   try {
     const post = await T.post("statuses/update", {
-      status: `Your deposit address is ${await getAddress(tweet.user.id_str)}.`,
+      status: `@${tweet.user.screen_name} Your deposit address is ${await getAddress(id(tweet.user.id_str))}.`,
       in_reply_to_status_id: tweet.id_str
     });
     logger.info(
@@ -117,18 +125,19 @@ async function doDeposit(tweet, msg) {
   }
 }
 async function doWithdraw(tweet, msg) {
+  try {
   if (msg.length < 4) return doHelp(tweet, msg);
   let address = msg[2];
   let amount = getValidatedAmount(msg[3]);
   if (amount === null) {
     return await T.post("statuses/update", {
-      status: `I don´t know how to withdraw that many credits...`,
+      status: `@${tweet.user.screen_name} I don´t know how to withdraw that many credits...`,
       in_reply_to_status_id: tweet.id_str
     });
   }
-  let txId = await lbry.sendFrom(tweet.user.id_str, address, amount);
+  let txId = await lbry.sendFrom(id(tweet.user.id_str), address, amount);
   await T.post("statuses/update", {
-    status: `You withdrew ${amount} LBC to ${address}. \n${txLink(txId)}`,
+    status: `@${tweet.user.screen_name} You withdrew ${amount} LBC to ${address}. \n${txLink(txId)}`,
     in_reply_to_status_id: tweet.id_str
   });
   logger.info(
@@ -136,7 +145,6 @@ async function doWithdraw(tweet, msg) {
       tweet.user.screen_name
     } withdraw ${amount} LBC to ${address}, tweet id: ${tweet.id_str}`
   );
-  try {
   } catch (e) {
     logger.error(e);
   }
@@ -149,25 +157,35 @@ async function doTip(tweet, msg) {
     const amount = getValidatedAmount(msg[3]);
     if (amount === null) {
       return await T.post("statuses/update", {
-        status: `I don´t know how to tip that many credits...`,
+        status: `@${tweet.user.screen_name} I don´t know how to tip that many credits...`,
         in_reply_to_status_id: tweet.id_str
       });
     }
-    const userToTip = userToTip(tweet, msg);
-    const userToTipAddress = getAddress(userToTip);
+    const userToTip = tweet.entities.user_mentions.find(u => `@${u.screen_name}` === msg[2]).id_str;
     if (userToTip === null) {
       return await T.post("statuses/update", {
-        status: `I could not find that user...`,
+        status: `@${tweet.user.screen_name} I could not find that user...`,
         in_reply_to_status_id: tweet.id_str
       });
     }
-    const txId = await lbry.sendFrom(
-      tweet.user.id_str,
-      userToTipAddress,
-      Number(amount),
-      null,
-      null
+    const balanceFromUser = await lbry.getBalance(id(tweet.user.id_str), config.get("bot.requiredConfirms"));
+    if (balanceFromUser < amount) {
+      return await T.post("statuses/update", {
+        status: `@${tweet.user.screen_name} You tried to tip, but you are missing ${amount-balanceFromUser} LBC.`,
+        in_reply_to_status_id: tweet.id_str
+      });
+    }
+    const txId = await lbry.move(
+      id(tweet.user.id_str),
+      id(userToTip),
+      Number(amount)
     );
+    await T.post("statuses/update", {
+      status: `@${tweet.user.screen_name} Tipped ${
+        msg[2]
+        } ${amount} LBC! \n See https://lbry.io/faq/tipbot-twitter for more information.`,
+      in_reply_to_status_id: tweet.id_str
+    });
     logger.info(
       `@${tweet.user.screen_name}(${tweet.user.id_str}) tipped ${
         msg[2]
@@ -188,11 +206,6 @@ async function getAddress(userId) {
     logger.error(e);
   }
 }
-function userToTip(tweet, msg) {
-  const username = msg[2];
-  const users = tweet.entities.user_mentions;
-  return users.find(u => `@${u.screen_name}` === username).id_str;
-}
 function getValidatedAmount(amount) {
   amount = amount.trim();
   if (amount.toLowerCase().endsWith("lbc")) {
@@ -206,4 +219,8 @@ function txLink(txId) {
 function checkTrunc(tweet) {
   if (tweet.truncated) return tweet.extended_tweet.full_text;
   return tweet.text;
+}
+
+function id(usrId){
+  return `t-${usrId}`;
 }

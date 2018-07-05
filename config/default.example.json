@@ -1,4 +1,8 @@
 {
+  "bot":{
+    "handle": "@devlbctipbot",
+    "requiredConfirms": 2
+  },
   "twitter": {
     "consumer_key": "****",
     "consumer_secret": "****",
