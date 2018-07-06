@@ -1,45 +1,17 @@
 {
-  "name": "node-tip-bot-twitter",
-  "version": "1.0.2",
-  "description": "node.js based tipping bot for any coin",
-  "main": "bin/tipbot",
   "dependencies": {
-    "express": "^3.21.2",
-    "js-yaml": "^3.11.0",
-    "node-gameunits": "^0.3.5",
-    "twitter": "^1.7.1",
-    "winston": "^2.4.2"
+    "bitcoin-core": "^2.0.0",
+    "config": "^1.30.0",
+    "twit": "^2.2.11",
+    "winston": "3",
+    "winston-daily-rotate-file": "^3.2.3"
   },
-  "devDependencies": {
-    "prettier": "^1.12.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bin/tipbot",
-    "prettier": "prettier --write \"{bot,.}/**/*.{js,json}\" --single-quote --print-width 240",
-    "build": "babel bot -d dist",
-    "prod": "babel bot -d dist & node dist/bot.js",
-    "lint": "prettier --write \"{bot,.}/**/*.{js,json}\" --single-quote --print-width 240",
-    "precommit": "prettier --write \"{bot,.}/**/*.{js,json}\" --single-quote --print-width 240"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/gameunits/node-tip-bot"
-  },
-  "author": "gameunits",
+  "name": "lbry-twitter-tipbot",
+  "version": "1.0.0",
+  "description": "A twitter tipbot for LBRY",
+  "main": "index.js",
+  "repository": "https://github.com/lbryio/twitter-tipbot/",
+  "author": "filipnyquist <filip@lbry.io>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gameunits/node-tip-bot/issues"
-  },
-  "homepage": "https://github.com/gameunits/node-tip-bot",
-  "keywords": [
-    "gameunits",
-    "bitcoin",
-    "litecoin",
-    "altcoin",
-    "tip",
-    "tipbot",
-    "irc",
-    "bot"
-  ]
+  "private": false
 }

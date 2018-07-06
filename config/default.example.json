@@ -1,0 +1,17 @@
+{
+  "bot":{
+    "handle": "@devlbctipbot",
+    "requiredConfirms": 2
+  },
+  "twitter": {
+    "consumer_key": "****",
+    "consumer_secret": "****",
+    "access_token": "****",
+    "access_token_secret": "****"
+  },
+  "lbrycrd": {
+    "username": "lbry",
+    "password": "lbry",
+    "port": 9245
+  }
+}
