@@ -77,14 +77,14 @@ async function doHelp(tweet, msg) {
   try {
     let post = await T.post("statuses/update", {
       status:
-        `@${tweet.user.screen_name} `+
-        `All commands should be called with ${config.get("bot.handle")} + subcommand \n` +
-        "help - Shows this command. \n" +
-        "balance - Get your balance. \n" +
-        "deposit - Get address for your deposits. \n" +
-        "withdraw ADDRESS AMOUNT - Withdraw AMOUNT credits to ADDRESS. \n" +
-        "tip USER AMOUNT - Tip USER AMOUNT.\n"+
-        "terms - Sends you the TOS.",
+      `@${tweet.user.screen_name} `+
+      `Call commands with: ${config.get("bot.handle")} + \n` +
+      "help - Shows this command.\n" +
+      "balance - Get your balance.\n" +
+      "deposit - Get address for your deposits.\n" +
+      "withdraw ADDRESS AMOUNT - Withdraw AMOUNT credits to ADDRESS.\n" +
+      "tip USER AMOUNT - Tip USER AMOUNT.\n"+
+      "terms - Sends the TOS.",
       in_reply_to_status_id: tweet.id_str
     });
     logger.info(
