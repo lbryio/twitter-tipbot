@@ -74,3 +74,5 @@ typings/
 
 # Configurations
 default.json
+
+.idea/*

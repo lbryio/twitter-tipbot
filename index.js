@@ -67,6 +67,10 @@ function checkTweet(tweet, msg) {
     case "terms":
       doTerms(tweet, msg);
       break;
+    case "lbryian":
+      logger.info("Got a command with the old format, handling it...");
+      checkTweet(tweet, msg.splice(1));
+      break;
   }
 }
 
@@ -75,7 +79,7 @@ async function doHelp(tweet, msg) {
     let post = await T.post("statuses/update", {
       status:
         `@${tweet.user.screen_name} `+
-        "All commands should be called with @ + subcommand \n" +
+        `All commands should be called with ${config.get("bot.handle")} + subcommand \n` +
         "help - Shows this command. \n" +
         "balance - Get your balance. \n" +
         "deposit - Get address for your deposits. \n" +
@@ -92,6 +96,13 @@ async function doHelp(tweet, msg) {
 }
 async function doTerms(tweet, msg){
 // ADD terms
+  await T.post("statuses/update", {
+    status:
+    `@${tweet.user.screen_name} `+
+    "There are no fees to use this bot except the automatic daemon fee. \n"+
+    "In no event shall LBRY Inc be responsible in the event of lost, stolen or misdirected funds.",
+    in_reply_to_status_id: tweet.id_str
+  });
 }
 async function doBalance(tweet, msg) {
   try {
@@ -162,6 +173,7 @@ async function doTip(tweet, msg) {
       });
     }
     const userToTip = tweet.entities.user_mentions.find(u => `@${u.screen_name}` === msg[2]).id_str;
+    await getAddress(id(userToTip)) // Call this to ensure user has an account.
     if (userToTip === null) {
       return await T.post("statuses/update", {
         status: `@${tweet.user.screen_name} I could not find that user...`,
@@ -206,6 +218,7 @@ async function getAddress(userId) {
     logger.error(e);
   }
 }
+
 function getValidatedAmount(amount) {
   amount = amount.trim();
   if (amount.toLowerCase().endsWith("lbc")) {

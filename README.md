@@ -23,7 +23,11 @@ yarn install
 ```
 node index.js
 ```
-
+>If you want to move over accounts from the old tipbot format which used usernames as identifier, run move_helper.js:
+```
+node move_helper.js
+```
+>It will automatically move over the old accounts to the new id based system.
 
 ## Contributing
 
