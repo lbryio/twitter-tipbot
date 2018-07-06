@@ -4,7 +4,6 @@ const winston = require("winston");
 require("winston-daily-rotate-file");
 const Client = require("bitcoin-core");
 const lbry = new Client({
-  version: "0.12.0",
   username: config.get("lbrycrd.username"),
   password: config.get("lbrycrd.password"),
   port: config.get("lbrycrd.port")
@@ -44,7 +43,7 @@ stream.on("tweet", function(tweet) {
   if(tweet.user.screen_name === config.get("bot.handle").substring(1)) return;
   let msg = checkTrunc(tweet);
   msg = msg.slice(msg.indexOf(config.get("bot.handle"))).split(" ");
-  checkTweet(tweet, msg);
+  if (msg.length >= 2) checkTweet(tweet, msg);
 });
 
 function checkTweet(tweet, msg) {
@@ -84,7 +83,8 @@ async function doHelp(tweet, msg) {
         "balance - Get your balance. \n" +
         "deposit - Get address for your deposits. \n" +
         "withdraw ADDRESS AMOUNT - Withdraw AMOUNT credits to ADDRESS. \n" +
-        "tip USER AMOUNT - Tip USER AMOUNT.",
+        "tip USER AMOUNT - Tip USER AMOUNT.\n"+
+        "terms - Sends you the TOS.",
       in_reply_to_status_id: tweet.id_str
     });
     logger.info(
@@ -100,7 +100,7 @@ async function doTerms(tweet, msg){
     status:
     `@${tweet.user.screen_name} `+
     "There are no fees to use this bot except the automatic daemon fee. \n"+
-    "In no event shall LBRY Inc be responsible in the event of lost, stolen or misdirected funds.",
+    "Under no circumstances shall LBRY Inc. be held responsible for lost, stolen or misdirected funds.",
     in_reply_to_status_id: tweet.id_str
   });
 }
@@ -173,7 +173,7 @@ async function doTip(tweet, msg) {
       });
     }
     const userToTip = tweet.entities.user_mentions.find(u => `@${u.screen_name}` === msg[2]).id_str;
-    await getAddress(id(userToTip)) // Call this to ensure user has an account.
+    let tipToAddress = await getAddress(id(userToTip)) // Call this to ensure user has an account.
     if (userToTip === null) {
       return await T.post("statuses/update", {
         status: `@${tweet.user.screen_name} I could not find that user...`,
@@ -183,19 +183,15 @@ async function doTip(tweet, msg) {
     const balanceFromUser = await lbry.getBalance(id(tweet.user.id_str), config.get("bot.requiredConfirms"));
     if (balanceFromUser < amount) {
       return await T.post("statuses/update", {
-        status: `@${tweet.user.screen_name} You tried to tip, but you are missing ${amount-balanceFromUser} LBC.`,
+        status: `@${tweet.user.screen_name} You tried tipping more than you have! You are ${amount-balanceFromUser} LBC short.`,
         in_reply_to_status_id: tweet.id_str
       });
     }
-    const txId = await lbry.move(
-      id(tweet.user.id_str),
-      id(userToTip),
-      Number(amount)
-    );
+    const txId = await lbry.sendFrom(id(tweet.user.id_str), tipToAddress, Number(amount), 1);
     await T.post("statuses/update", {
       status: `@${tweet.user.screen_name} Tipped ${
         msg[2]
-        } ${amount} LBC! \n See https://lbry.io/faq/tipbot-twitter for more information.`,
+        } ${amount} LBC! \nTransaction: ${txLink(txId)} \nSee https://lbry.io/faq/tipbot-twitter for more information.`,
       in_reply_to_status_id: tweet.id_str
     });
     logger.info(

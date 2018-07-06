@@ -85,9 +85,8 @@ async function getAddress(userId) {
     let uAddresses = await lbry.getAddressesByAccount(userId);
     if (uAddresses.length > 0) return;
     await lbry.getNewAddress(userId);
-    return;
   } catch (e) {
-    logger.error(e);
+    throw("Something went wrong while creating an account for the user: ", e);
   }
 }
 
