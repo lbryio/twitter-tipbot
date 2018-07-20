@@ -123,7 +123,7 @@ async function doBalance(tweet, msg) {
 async function doDeposit(tweet, msg) {
   try {
     const post = await T.post("statuses/update", {
-      status: `@${tweet.user.screen_name} Your deposit address is ${await getAddress(id(tweet.user.id_str))}.`,
+      status: `@${tweet.user.screen_name} Your deposit address is ${await getAddress(id(tweet.user.id_str))}`,
       in_reply_to_status_id: tweet.id_str
     });
     logger.info(
