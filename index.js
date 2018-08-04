@@ -42,7 +42,7 @@ logger.info("Started LBRY twitter tipbot.");
 stream.on("tweet", function(tweet) {
   if(tweet.user.screen_name === config.get("bot.handle").substring(1)) return;
   let msg = checkTrunc(tweet);
-  msg = msg.slice(msg.lastIndexOf(config.get("bot.handle"))).split(" ");
+  msg = msg.replace(/[\n\\]/g, " ").slice(msg.lastIndexOf(config.get("bot.handle"))).split(" ");
   if (msg.length >= 2) checkTweet(tweet, msg);
 });
 
