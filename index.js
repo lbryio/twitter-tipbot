@@ -189,9 +189,7 @@ async function doTip(tweet, msg) {
     }
     const txId = await lbry.sendFrom(id(tweet.user.id_str), tipToAddress, Number(amount), 1);
     await T.post("statuses/update", {
-      status: `@${tweet.user.screen_name} Tipped ${
-        msg[2]
-        } ${amount} LBC! \nTransaction: ${txLink(txId)} \nSee https://lbry.io/faq/tipbot-twitter for more information.`,
+      status: `@${tweet.user.screen_name} Tipped ${amount} LBC! We'd say who it was to, but then Twitter would ban the bot. \nTransaction: ${txLink(txId)} \nSee https://lbry.io/faq/tipbot-twitter for more information.`,
       in_reply_to_status_id: tweet.id_str
     });
     logger.info(
