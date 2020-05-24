@@ -31,16 +31,16 @@ node move_helper.js
 
 ## Contributing
 
-Contributions to this project are welcome, encouraged, and compensated. For more details, see [lbry.io/faq/contributing](https://lbry.io/faq/contributing)
+Contributions to this project are welcome, encouraged, and compensated. For more details, see [lbry.tech/contribute](https://lbry.tech/contribute)
 
 ## License
 This project is MIT Licensed &copy; [LBRYio](https://github.com/lbryio)
 
 ## Security
 
-We take security seriously. Please contact security@lbry.io regarding any security issues.
+We take security seriously. Please contact security@lbry.com regarding any security issues.
 Our PGP key is [here](https://keybase.io/lbry/key.asc) if you need it.
 
 ## Contact
 
-The primary contact for this project is [@filipnyquist](https://github.com/filipnyquist) (filip@lbry.io)
+The primary contact for this project is [@filipnyquist](https://github.com/filipnyquist) (filip@lbry.com)
